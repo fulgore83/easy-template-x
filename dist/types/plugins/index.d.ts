@@ -7,5 +7,7 @@ export * from './loopPlugin';
 export * from './pluginContent';
 export * from './rawXmlContent';
 export * from './rawXmlPlugin';
+export * from './rawTableContent';
+export * from './rawTablePlugin';
 export * from './templatePlugin';
 export * from './textPlugin';

@@ -2528,6 +2528,30 @@ class RawXmlPlugin extends TemplatePlugin {
 
 }
 
+class RawTablePlugin extends TemplatePlugin {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "contentType", 'rawTable');
+  }
+
+  /**
+   * Replace the current <w:t> node with the specified xml markup.
+   */
+  simpleTagReplacements(tag, data) {
+    const wordTextNode = this.utilities.docxParser.containingTextNode(tag.xmlTextNode);
+    const value = data.getScopeData();
+
+    if (value && typeof value.xml === 'string') {
+      const newNode = this.utilities.xmlParser.parse(value.xml);
+      XmlNode.insertBefore(newNode, wordTextNode);
+    }
+
+    XmlNode.remove(wordTextNode);
+  }
+
+}
+
 const TEXT_CONTENT_TYPE = 'text';
 class TextPlugin extends TemplatePlugin {
   constructor(...args) {
@@ -2589,7 +2613,7 @@ class TextPlugin extends TemplatePlugin {
 }
 
 function createDefaultPlugins() {
-  return [new LoopPlugin(), new RawXmlPlugin(), new ImagePlugin(), new LinkPlugin(), new TextPlugin()];
+  return [new LoopPlugin(), new RawXmlPlugin(), new RawTablePlugin(), new ImagePlugin(), new LinkPlugin(), new TextPlugin()];
 }
 
 const PluginContent = {
@@ -3007,6 +3031,7 @@ exports.MissingCloseDelimiterError = MissingCloseDelimiterError;
 exports.MissingStartDelimiterError = MissingStartDelimiterError;
 exports.Path = Path;
 exports.PluginContent = PluginContent;
+exports.RawTablePlugin = RawTablePlugin;
 exports.RawXmlPlugin = RawXmlPlugin;
 exports.Regex = Regex;
 exports.ScopeData = ScopeData;

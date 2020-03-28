@@ -2530,6 +2530,30 @@ class RawXmlPlugin extends TemplatePlugin {
 
 }
 
+class RawTablePlugin extends TemplatePlugin {
+  constructor(...args) {
+    super(...args);
+
+    _defineProperty(this, "contentType", 'rawTable');
+  }
+
+  /**
+   * Replace the current <w:t> node with the specified xml markup.
+   */
+  simpleTagReplacements(tag, data) {
+    const wordTextNode = this.utilities.docxParser.containingTextNode(tag.xmlTextNode);
+    const value = data.getScopeData();
+
+    if (value && typeof value.xml === 'string') {
+      const newNode = this.utilities.xmlParser.parse(value.xml);
+      XmlNode.insertBefore(newNode, wordTextNode);
+    }
+
+    XmlNode.remove(wordTextNode);
+  }
+
+}
+
 const TEXT_CONTENT_TYPE = 'text';
 class TextPlugin extends TemplatePlugin {
   constructor(...args) {
@@ -2591,7 +2615,7 @@ class TextPlugin extends TemplatePlugin {
 }
 
 function createDefaultPlugins() {
-  return [new LoopPlugin(), new RawXmlPlugin(), new ImagePlugin(), new LinkPlugin(), new TextPlugin()];
+  return [new LoopPlugin(), new RawXmlPlugin(), new RawTablePlugin(), new ImagePlugin(), new LinkPlugin(), new TextPlugin()];
 }
 
 const PluginContent = {
@@ -2991,4 +3015,4 @@ class TemplateHandler {
 
 }
 
-export { Base64, Binary, DelimiterSearcher, Delimiters, Docx, DocxParser, ImagePlugin, LOOP_CONTENT_TYPE, LinkPlugin, LoopPlugin, MalformedFileError, MaxXmlDepthError, MimeType, MimeTypeHelper, MissingArgumentError, MissingCloseDelimiterError, MissingStartDelimiterError, Path, PluginContent, RawXmlPlugin, Regex, ScopeData, TEXT_CONTENT_TYPE, TEXT_NODE_NAME, TagDisposition, TagParser, TemplateCompiler, TemplateExtension, TemplateHandler, TemplateHandlerOptions, TemplatePlugin, TextPlugin, UnclosedTagError, UnidentifiedFileTypeError, UnknownContentTypeError, UnopenedTagError, UnsupportedFileTypeError, XmlDepthTracker, XmlNode, XmlNodeType, XmlParser, Zip, ZipObject, createDefaultPlugins, first, inheritsFrom, isPromiseLike, last, pushMany, sha1, toDictionary };
+export { Base64, Binary, DelimiterSearcher, Delimiters, Docx, DocxParser, ImagePlugin, LOOP_CONTENT_TYPE, LinkPlugin, LoopPlugin, MalformedFileError, MaxXmlDepthError, MimeType, MimeTypeHelper, MissingArgumentError, MissingCloseDelimiterError, MissingStartDelimiterError, Path, PluginContent, RawTablePlugin, RawXmlPlugin, Regex, ScopeData, TEXT_CONTENT_TYPE, TEXT_NODE_NAME, TagDisposition, TagParser, TemplateCompiler, TemplateExtension, TemplateHandler, TemplateHandlerOptions, TemplatePlugin, TextPlugin, UnclosedTagError, UnidentifiedFileTypeError, UnknownContentTypeError, UnopenedTagError, UnsupportedFileTypeError, XmlDepthTracker, XmlNode, XmlNodeType, XmlParser, Zip, ZipObject, createDefaultPlugins, first, inheritsFrom, isPromiseLike, last, pushMany, sha1, toDictionary };
